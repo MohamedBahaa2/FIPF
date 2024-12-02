@@ -1,14 +1,14 @@
 class Function:
-    def __init__(self,degree):
-        self.degree = degree
+    def __init__(self,dimensions: int):
+        self.dimensions = dimensions
         
     @property
-    def degree(self):
-        return self._degree
+    def dimensions(self):
+        return self._dimensions
     
-    @degree.setter
-    def degree(self,degree):
-        self._degree = degree
+    @dimensions.setter
+    def dimensions(self,dimensions: int):
+        self._dimensions = dimensions
         
     
-            
+             
