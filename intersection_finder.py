@@ -1,6 +1,6 @@
 from sympy import symbols, diff, sympify,Matrix
-
-
+import matplotlib.pyplot as plt
+import numpy as np
 #App Header/Start Menu
 
 program_header = """
@@ -44,12 +44,12 @@ else:
     print("Jacobian is singular at the point.")
     exit()
 
-point = Matrix([[-2],       # guess point (x,y) = (1,1)
-                [-3]])
+point = Matrix([[1],       # guess point (x,y) = (1,1)
+                [1]])
 
 new_point = list()
 
-tolerance = 1e-6
+tolerance = 1e-3
 
 while True:
     J_inv_val = J_inv.subs({x: point[0,0], y: point[1,0]}).evalf()
@@ -62,4 +62,7 @@ while True:
         point = new_point
         
 
-print(point)
+intersection_point = ((round(point[0])), round(point[1]))
+
+print(f"computed intersection point is {intersection_point}")
+
