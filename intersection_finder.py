@@ -1,4 +1,4 @@
-from sympy import symbols, diff, sympify,Matrix
+from sympy import symbols, diff, sympify,lambdify,Matrix
 import matplotlib.pyplot as plt
 import numpy as np
 #App Header/Start Menu
@@ -38,31 +38,41 @@ F = Matrix([[f],          # F-matrix (original functions matrix)
 J = Matrix([[diff(f,x),diff(f,y)],
             [diff(g,x),diff(g,y)]])
 
-if J.det() != 0:
-    J_inv = J.inv()
-else:
+
+if J.det() == 0:
     print("Jacobian is singular at the point.")
     exit()
 
-point = Matrix([[1],       # guess point (x,y) = (1,1)
-                [1]])
-
-new_point = list()
-
+point = np.array([1,1])
 tolerance = 1e-3
 
+f_numeric = lambdify((x, y), f, 'numpy')
+g_numeric = lambdify((x, y), g, 'numpy')
+f_prime_x = lambdify((x, y), diff(f, x), 'numpy')
+f_prime_y = lambdify((x, y), diff(f, y), 'numpy')
+g_prime_x = lambdify((x, y), diff(g, x), 'numpy')
+g_prime_y = lambdify((x, y), diff(g, y), 'numpy')
+
+
 while True:
-    J_inv_val = J_inv.subs({x: point[0,0], y: point[1,0]}).evalf()
-    F_val = F.subs({x: point[0,0], y: point[1,0]}).evalf()
-    new_point = point - J_inv_val * F_val
+    J = np.array([[f_prime_x(point[0], point[1]), f_prime_y(point[0], point[1])],
+                  [g_prime_x(point[0], point[1]), g_prime_y(point[0], point[1])]])
     
-    if F_val.norm() < tolerance or (new_point - point).norm() < tolerance:
+   
+    F_val = np.array([f_numeric(point[0], point[1]), g_numeric(point[0], point[1])])
+
+    J_inv = np.linalg.inv(J)
+    
+    new_point = point - np.dot(J_inv, F_val)
+
+    # Check for convergence
+    if np.linalg.norm(F_val) < tolerance or np.linalg.norm(new_point - point) < tolerance:
         break
     else:
         point = new_point
         
 
-intersection_point = ((round(point[0])), round(point[1]))
+intersection_point = (round(((point[0])).item()), round((point[1]).item()))
 
 print(f"computed intersection point is {intersection_point}")
 
