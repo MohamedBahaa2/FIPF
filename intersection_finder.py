@@ -1,5 +1,4 @@
 from sympy import symbols, diff, sympify,lambdify,Matrix
-import matplotlib.pyplot as plt
 import numpy as np
 #App Header/Start Menu
 
