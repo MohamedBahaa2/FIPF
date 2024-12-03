@@ -2,7 +2,7 @@
  
 
 ## To Do:
- - Add the option for multi-dimensional functions (3,4,5,...) 
- - Add support for non polynomial functions
+ - Making the dimension parameter dynamic, not limited to 2 and 3.
+ - Add support for non-polynomial functions
 
-#### By: Mohamed Bahaa Elshal
+#### By Mohamed Bahaa Elshal
