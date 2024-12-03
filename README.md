@@ -1,4 +1,4 @@
-# Non-linear Functions Intersection Point Finder
+# Functions Intersection Point Finder
  
 
 ## To Do:
