@@ -7,7 +7,6 @@ program_header = """
 
 
 > Program capabilities:
-        $ The program only supports 2 functions
         $ Only polynomial functions are supported
 
 > Instructions:
