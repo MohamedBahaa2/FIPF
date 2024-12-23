@@ -35,22 +35,13 @@ g = sympify(str(input_g)) # function 2
 if dimension == 3:
     q = sympify(str(input_q))
 
+
 if dimension == 2:
-    J = Matrix([[diff(f,x),diff(f,y)],
-                [diff(g,x),diff(g,y)]])
     point = np.array([0,0.5])
     
 if dimension == 3:
-    J = Matrix([[diff(f,x),diff(f,y),diff(f,z)],
-                [diff(g,x),diff(g,y),diff(g,z)],
-                [diff(q,x),diff(q,y),diff(q,z)]])
     point = np.array([12,1,1])
     
-if J.det() == 0:
-    print("Jacobian is singular at the point.")
-    exit()
-
-
 
 tolerance = 1e-3
 
@@ -81,25 +72,24 @@ if dimension == 3:
     q_prime_y = lambdify((x, y, z), diff(q, y), 'numpy')
     q_prime_z = lambdify((x, y, z), diff(q, z), 'numpy')
 
+
+# Initial Jacobian matrix and its inverse
+if dimension == 2:
+    J = np.array([[f_prime_x(point[0], point[1]), f_prime_y(point[0], point[1])],
+                  [g_prime_x(point[0], point[1]), g_prime_y(point[0], point[1])]])
+elif dimension == 3:
+    J = np.array([[f_prime_x(point[0], point[1], point[2]), f_prime_y(point[0], point[1], point[2]), f_prime_z(point[0], point[1], point[2])],
+                  [g_prime_x(point[0], point[1], point[2]), g_prime_y(point[0], point[1], point[2]), g_prime_z(point[0], point[1], point[2])],
+                  [q_prime_x(point[0], point[1], point[2]), q_prime_y(point[0], point[1], point[2]), q_prime_z(point[0], point[1], point[2])]])
+
+J_inv = np.linalg.inv(J)
+
 while True:
     if dimension == 2:
-        J = np.array([[f_prime_x(point[0], point[1]), f_prime_y(point[0], point[1])],
-                    [g_prime_x(point[0], point[1]), g_prime_y(point[0], point[1])]])
-        
-    
         F_val = np.array([f_numeric(point[0], point[1]), g_numeric(point[0], point[1])])
-
-        
-    if dimension == 3:
-        J = np.array([[f_prime_x(point[0], point[1], point[2]), f_prime_y(point[0], point[1], point[2]), f_prime_z(point[0], point[1], point[2])],
-                      [g_prime_x(point[0], point[1], point[2]), g_prime_y(point[0], point[1], point[2]), g_prime_z(point[0], point[1], point[2])],
-                      [q_prime_x(point[0], point[1], point[2]), q_prime_y(point[0], point[1], point[2]), q_prime_z(point[0], point[1], point[2])]])
-        
-    
+    elif dimension == 3:
         F_val = np.array([f_numeric(point[0], point[1], point[2]), g_numeric(point[0], point[1], point[2]), q_numeric(point[0], point[1], point[2])])
 
-        
-    J_inv = np.linalg.inv(J)    
     new_point = point - np.dot(J_inv, F_val)
 
     # Check for convergence
@@ -107,11 +97,20 @@ while True:
         break
     else:
         point = new_point
-        
+        # Update the Jacobian matrix and its inverse if necessary
+        if dimension == 2:
+            J = np.array([[f_prime_x(point[0], point[1]), f_prime_y(point[0], point[1])],
+                          [g_prime_x(point[0], point[1]), g_prime_y(point[0], point[1])]])
+        elif dimension == 3:
+            J = np.array([[f_prime_x(point[0], point[1], point[2]), f_prime_y(point[0], point[1], point[2]), f_prime_z(point[0], point[1], point[2])],
+                          [g_prime_x(point[0], point[1], point[2]), g_prime_y(point[0], point[1], point[2]), g_prime_z(point[0], point[1], point[2])],
+                          [q_prime_x(point[0], point[1], point[2]), q_prime_y(point[0], point[1], point[2]), q_prime_z(point[0], point[1], point[2])]])
+        J_inv = np.linalg.inv(J)
+
 if dimension == 2:
-    intersection_point = (round(((point[0])).item()), round((point[1]).item()))
-if dimension == 3:
-    intersection_point = (round(((point[0])).item()), round((point[1]).item()), round((point[2]).item()))
-    
+    intersection_point = (round(point[0].item()), round(point[1].item()))
+elif dimension == 3:
+    intersection_point = (round(point[0].item()), round(point[1].item()), round(point[2].item()))
+
 print(f"computed intersection point is {intersection_point}")
 
