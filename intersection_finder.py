@@ -36,22 +36,15 @@ if dimension == 3:
     q = sympify(str(input_q))
 
 if dimension == 2:
-    F = Matrix([[f],          # F-matrix (original functions matrix)
-                [g]])
-
     J = Matrix([[diff(f,x),diff(f,y)],
                 [diff(g,x),diff(g,y)]])
-    point = np.array([1,1])
+    point = np.array([0,0.5])
     
 if dimension == 3:
-    F = Matrix([[f],          # F-matrix (original functions matrix)
-                [g],
-                [q]])
-
     J = Matrix([[diff(f,x),diff(f,y),diff(f,z)],
                 [diff(g,x),diff(g,y),diff(g,z)],
                 [diff(q,x),diff(q,y),diff(q,z)]])
-    point = np.array([1,1,1])
+    point = np.array([12,1,1])
     
 if J.det() == 0:
     print("Jacobian is singular at the point.")
