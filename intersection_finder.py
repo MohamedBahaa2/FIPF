@@ -1,6 +1,7 @@
 from sympy import symbols, diff, sympify,lambdify,Matrix
 import numpy as np
-
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 program_header = """
 
 > Welcome to The Functions Intersection Point Finder
@@ -50,7 +51,7 @@ if dimension == 3:
 
     
 
-tolerance = 1e-3
+tolerance = 1e-7
 
 if dimension == 2:
     f_numeric = lambdify((x, y), f, 'numpy')
@@ -121,3 +122,40 @@ elif dimension == 3:
 
 print(f"computed intersection point is {intersection_point}")
 
+# Plotting the functions and intersection point
+if dimension == 2:
+    x_vals = np.linspace(-10, 10, 400)
+    y_vals_f = [f.subs({x: val, y: intersection_point[1]}) for val in x_vals]
+    y_vals_g = [g.subs({x: val, y: intersection_point[1]}) for val in x_vals]
+
+    plt.plot(x_vals, y_vals_f, label='Function 1')
+    plt.plot(x_vals, y_vals_g, label='Function 2')
+    plt.scatter(*intersection_point, color='red', label='Intersection Point')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.legend()
+    plt.title('Intersection of Functions')
+    plt.grid(True)
+    plt.show()
+
+elif dimension == 3:
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    x_vals = np.linspace(-10, 10, 30)
+    y_vals = np.linspace(-10, 10, 30)
+    x_vals, y_vals = np.meshgrid(x_vals, y_vals)
+    z_vals_f = np.array([[f.subs({x: xv, y: yv}) for xv, yv in zip(x_row, y_row)] for x_row, y_row in zip(x_vals, y_vals)])
+    z_vals_g = np.array([[g.subs({x: xv, y: yv}) for xv, yv in zip(x_row, y_row)] for x_row, y_row in zip(x_vals, y_vals)])
+    z_vals_q = np.array([[q.subs({x: xv, y: yv}) for xv, yv in zip(x_row, y_row)] for x_row, y_row in zip(x_vals, y_vals)])
+
+    ax.plot_surface(x_vals, y_vals, z_vals_f, alpha=0.5, label='Function 1')
+    ax.plot_surface(x_vals, y_vals, z_vals_g, alpha=0.5, label='Function 2')
+    ax.plot_surface(x_vals, y_vals, z_vals_q, alpha=0.5, label='Function 3')
+    ax.scatter(*intersection_point, color='red', label='Intersection Point')
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+    plt.legend()
+    plt.title('Intersection of Functions')
+    plt.show()
