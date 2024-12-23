@@ -22,6 +22,17 @@ program_header = """
 print(program_header)
 dimension = int(input("please enter the number of functions, options: [2,3]:  "))
 
+if dimension == 2:
+    user_guess = input("Please enter the initial point in the form of (x,y) and press enter")
+    p1,p2 = user_guess.split(",")
+    point = np.array([int(p1.strip()),int(p2.strip())])
+
+if dimension == 3:
+    user_guess = input("Please enter the initial point in the form of (x,y,z) and press enter")
+    p1,p2,p3 = user_guess.split(",")
+    point = np.array([int(p1.strip()),int(p2.strip()),int(p3.strip())])
+    
+
 input_f = input("Function 1: ")
 input_g = input("Function 2: ")
 
@@ -36,11 +47,7 @@ if dimension == 3:
     q = sympify(str(input_q))
 
 
-if dimension == 2:
-    point = np.array([0,0.5])
-    
-if dimension == 3:
-    point = np.array([12,1,1])
+
     
 
 tolerance = 1e-3
@@ -108,9 +115,9 @@ while True:
         J_inv = np.linalg.inv(J)
 
 if dimension == 2:
-    intersection_point = (round(point[0].item()), round(point[1].item()))
+    intersection_point = (point[0].item(), point[1].item())
 elif dimension == 3:
-    intersection_point = (round(point[0].item()), round(point[1].item()), round(point[2].item()))
+    intersection_point = (point[0].item(), point[1].item(), point[2].item())
 
 print(f"computed intersection point is {intersection_point}")
 
