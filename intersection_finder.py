@@ -51,7 +51,7 @@ if dimension == 3:
 
     
 
-tolerance = 1e-7
+tolerance = 1e-12
 
 if dimension == 2:
     f_numeric = lambdify((x, y), f, 'numpy')
